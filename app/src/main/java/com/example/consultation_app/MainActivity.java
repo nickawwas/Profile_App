@@ -7,14 +7,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 
 import com.example.consultation_app.database.DatabaseHelper;
+import com.example.consultation_app.models.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     protected TextView totalProfilesCount;
@@ -29,19 +31,17 @@ public class MainActivity extends AppCompatActivity {
         // Add Buttons to Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //TODO: Connect to DB
-
         // Create Object & Initialize Total Profile Count
         totalProfilesCount = findViewById(R.id.mainProfileCount);
-        //initTotalCount();
 
-        // Create ListView of Profiles
+        // Create ListView of Profiles & Load Profiles
         profileList = findViewById(R.id.profileDataList);
+        loadProfileListView(true);
 
         profileList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Determine List Element Then Pass Element to Profile Page
+                // TODO: Determine List Element Then Pass Element to Profile Page
                 goToProfileActivity();
             }
         });
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // TODO: Delete?
     @Override
     protected void onStart() {
         super.onStart();
@@ -79,10 +80,12 @@ public class MainActivity extends AppCompatActivity {
         // Toggle Between Profile Name And Id
         switch (item.getItemId()) {
             case R.id.toggleProfilesById:
-                // TODO: Query Data Using Id
+                // Query Data Ordered By Id
+                loadProfileListView(false);
                 return true;
             case R.id.toggleProfilesByName:
-                // TODO: Query Data Using Name
+                // Query Data Ordered By Name
+                loadProfileListView(true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -95,12 +98,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // TODO: Get, Initialize, and Update Total Count Text
-    protected void loadProfileListView() {
+    // Get, Initialize, and Update Total Count Text
+    protected void loadProfileListView(boolean orderByName) {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
-        //List<Profile> profiles = dbHelper.getAllProfiles();
+        List<Profile> profiles = dbHelper.getAllProfiles(orderByName);
 
-        //ArrayList<String> profileListNames = new ArrayList<>();
-        //ArrayList<String> profileListIds = new ArrayList<>();
+        // Add Profile Entries to ListView
+        profileList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, profiles));
+
+        // Add Number of Entries to Textview
+        totalProfilesCount.setText(profiles.size() + " " + getResources().getString(R.string.profileNumbers) + " " + getResources().getString(orderByName ? R.string.profileSortedByName : R.string.profileSortedById));
     }
 }

@@ -10,6 +10,7 @@ public class Config {
     public static final String PROFILE_COLUMN_NAME = "name";
     public static final String PROFILE_COLUMN_SID = "student_id";
     public static final String PROFILE_COLUMN_GPA = "gpa";
+    public static final String PROFILE_COLUMN_CREATION_DATE = "creation_date";
 
     public static final String ACCESS_TABLE_NAME = "accesses";
     public static final String ACCESS_COLUMN_ID = "_id";

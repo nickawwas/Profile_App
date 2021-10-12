@@ -3,13 +3,15 @@ package com.example.consultation_app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.consultation_app.database.AppDB;
+import com.example.consultation_app.database.DatabaseHelper;
+import com.example.consultation_app.models.Access;
+import com.example.consultation_app.models.Profile;
+
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -33,6 +35,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Scrollable List of Accesses
         accessHistoryList = findViewById(R.id.accessHistoryList);
+
+        //TODO: Delete Profile Action Menu Item
     }
 
     @Override
@@ -40,29 +44,24 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
 
         //Default Display Profile Names And Access History
-        initProfile();
+        //initProfile();
     }
 
-    private void initProfile() {
-        // Get Profile Surname, Name, Id, GPA, Creation Date
-        //TODO: Get From DB
-        String surname = "";
-        String name = "";
-        String id = "";
-        String gpa = "";
-        String creationDate = "";
+    private void initProfile(long profileId) {
+        // Get Profile Clicked On With Given Id
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        Profile profile = dbHelper.getProfileById(profileId);
 
-        // Set Profile Data
-        profileSurname.setText(getTextFromResource(R.string.profileSurname, surname));
-        profileName.setText(getTextFromResource(R.string.profileName, name));
-        profileID.setText(getTextFromResource(R.string.profileID, id));
-        profileGPA.setText(getTextFromResource(R.string.profileGPA, gpa));
-        profileCreationDate.setText(getTextFromResource(R.string.profileCreationDate, creationDate));
+        // Set Profile Data to TextView
+        profileSurname.setText(getTextFromResource(R.string.profileSurname, profile.getSurname()));
+        profileName.setText(getTextFromResource(R.string.profileName, profile.getStudentName()));
+        profileID.setText(getTextFromResource(R.string.profileID, profile.getStudentId() + ""));
+        profileGPA.setText(getTextFromResource(R.string.profileGPA, profile.getGpa() + ""));
+        profileCreationDate.setText(getTextFromResource(R.string.profileCreationDate, profile.getCreationDate() + ""));
 
-
-        // Get List of Accesses - TODO: Get From DB
-        //accessHistoryList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1,
-        //);
+        // Get List of Accesses
+        List<Access> accesses = dbHelper.getAllAccessesById(profileId);
+        accessHistoryList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, accesses));
     }
 
 

@@ -1,7 +1,6 @@
 package com.example.consultation_app;
 
 import android.os.Bundle;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.consultation_app.database.DatabaseHelper;
 
 // Dialog Fragment
 public class InsertProfileDialogFragment extends DialogFragment {
@@ -39,13 +40,14 @@ public class InsertProfileDialogFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToMainActivity();
+                dismiss();
             }
         });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                DatabaseHelper dbHelper = new DatabaseHelper(this);
                 String surname = getInputText(profileSurnameInput);
                 String name = getInputText(profileNameInput);
                 String id = getInputText(profileStudentIDInput);
@@ -74,20 +76,13 @@ public class InsertProfileDialogFragment extends DialogFragment {
 //                    }
 //                }
             }
-
         });
 
         return view;
     }
 
-    // Get Counter Input Name Text
-    private String getInputText(EditText counterElement) {
-        return counterElement.getText().toString();
-    }
-
-    // Navigation to Main Activity
-    private void goToMainActivity() {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
+    // Get Input Name Text
+    private String getInputText(EditText inputElement) {
+        return inputElement.getText().toString();
     }
 }

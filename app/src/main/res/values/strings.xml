@@ -3,8 +3,8 @@
 
     <!-- Main Activity -->
     <string name="settingsButton"> Main Activity </string>
-    <string name="toggleProfileId"> By ID </string>
-    <string name="toggleProfileName"> By Profile Name </string>
+    <string name="toggleProfileId"> By Id </string>
+    <string name="toggleProfileName"> By Name </string>
     <string name="profileNumbers"> Profiles </string>
     <string name="profileSortedById"> (Sorted By ID) </string>
     <string name="profileSortedByName"> (Sorted By Name) </string>
@@ -16,7 +16,7 @@
     <string name="dialogGPAInput"> Student GPA </string>
     <string name="dialogCancel"> Cancel </string>
     <string name="dialogSave"> Save </string>
-    <string name="profileNameDigits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -'"</string>
+    <string name="profileNameDigits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -</string>
     <string name="profileIdDigits">1234567890</string>
     <string name="profileGPADigits">1234567890.</string>
 
@@ -29,7 +29,6 @@
     <string name="profileGPA"> GPA: </string>
     <string name="profileCreationDate"> Profile Created: </string>
     <string name="profileHistory"> Access History </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="deleteProfile"> Delete Profile </string>
 </resources>
 
