@@ -15,6 +15,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.consultation_app.database.DatabaseHelper;
+import com.example.consultation_app.models.Access;
+import com.example.consultation_app.models.Profile;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 // Dialog Fragment
 public class InsertProfileDialogFragment extends DialogFragment {
@@ -47,34 +52,48 @@ public class InsertProfileDialogFragment extends DialogFragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                DatabaseHelper dbHelper = new DatabaseHelper(this);
+                // Initialize Database Helper
+                DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+
+                // Get Input Responses
                 String surname = getInputText(profileSurnameInput);
                 String name = getInputText(profileNameInput);
                 String id = getInputText(profileStudentIDInput);
                 String gpa = getInputText(profileGPAInput);
 
-                // Validate Inputs - All Inputs Must Be Filled
-//                if (surname.isEmpty() || name.isEmpty() || id.isEmpty() || gpa.isEmpty()) {
-//                    Toast.makeText(getApplicationContext(), "Must Fill All Input Fields!", Toast.LENGTH_LONG).show();
-//                } else {
-//
-//                    // Id Must Be Exactly 8 Characters Long
-//                    if (id.length() < 8) {
-//                        Toast.makeText(getApplicationContext(), "IDs Must Be Exactly 8 Numbers Long!", Toast.LENGTH_LONG).show();
-//                        //TODO: Check if ID Exists in DB
-//                    } else if (id != "0101 0101") {
-//                        Toast.makeText(getApplicationContext(), "User with Inputted ID Already Exists!", Toast.LENGTH_LONG).show();
-//                    } else {
-//
-//                        //Check GPA - < 4.3 & Has First Number Not Period
-//                        if (gpa != "4.3") {
-//                            Toast.makeText(getApplicationContext(), "GPA Must Be Between 0.0 and 4.3!", Toast.LENGTH_LONG).show();
-//                        } else {
-//                            // TODO: Insert Data into Table
-//                            Toast.makeText(getApplicationContext(), "Student Profile Saved!", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                }
+                int idNum = Integer.parseInt(id);
+                double gpaNum = Double.parseDouble(gpa);
+
+                // Validate Inputs
+                // 1) All Inputs Must Be Filled
+                if (surname.isEmpty() || name.isEmpty() || id.isEmpty() || gpa.isEmpty()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Must Fill All Input Fields!", Toast.LENGTH_LONG).show();
+                } else {
+                    // 2) Id Must Be Exactly 8 Characters Long
+                    if (id.length() != 8) {
+                        Toast.makeText(getActivity().getApplicationContext(), "IDs Must Be Exactly 8 Numbers Long!", Toast.LENGTH_LONG).show();
+                        // 3) Id Must Be Between 1000 0000 and 9999 9999
+                    } else if (idNum < 10000000 || idNum > 99999999) {
+                        Toast.makeText(getActivity().getApplicationContext(), "IDs Must Be Exactly 8 Numbers Long!", Toast.LENGTH_LONG).show();
+                        // 4) Id Must Be Unique, Cannot Already Exist in DB
+                    } else if (dbHelper.getProfileById(idNum) != null) {
+                        Toast.makeText(getActivity().getApplicationContext(), "User with Inputted ID Already Exists!", Toast.LENGTH_LONG).show();
+                    } else {
+                        //5) GPA Must Be Between 0.0 and 4.3
+                        if (gpaNum < 0.0 && gpaNum > 4.3) {
+                            Toast.makeText(getActivity().getApplicationContext(), "GPA Must Be Between 0.0 and 4.3!", Toast.LENGTH_LONG).show();
+                        } else {
+                            // Finally Insert Data into Profile Table
+                            Date creationDate = new Date();
+
+                            long profileId = dbHelper.insertProfile(new Profile(-1, surname, name, idNum, gpaNum, creationDate));
+                            long accessId = dbHelper.insertAccess(new Access(-1, profileId, "CREATED", creationDate));
+
+                            Toast.makeText(getActivity().getApplicationContext(), "Student Profile Saved:" + profileId + "," + accessId + "!", Toast.LENGTH_LONG).show();
+                            dismiss();
+                        }
+                    }
+                }
             }
         });
 

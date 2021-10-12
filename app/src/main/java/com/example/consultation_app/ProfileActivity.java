@@ -37,8 +37,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Scrollable List of Accesses
         accessHistoryList = findViewById(R.id.accessHistoryList);
-
-        //TODO: Delete Profile Action Menu Item
     }
 
     @Override
@@ -46,10 +44,12 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
 
         //Default Display Profile Names And Access History
-        //initProfile();
+        Bundle b = getIntent().getExtras();
+        if(b != null)
+            initProfile(b.getInt("profileId"));
     }
 
-    private void initProfile(long profileId) {
+    private void initProfile(int profileId) {
         // Get Profile Clicked On With Given Id
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         Profile profile = dbHelper.getProfileById(profileId);
@@ -78,7 +78,10 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.deleteProfile:
-                // TODO: Delete Profile and Add Access
+                // Delete Profile and Add Access
+                // deleteProfile(profileId);
+                // Insert Deleted Access to Access Table
+                // insertAccess(new Access(0, profileId, "Deleted", new Date()));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

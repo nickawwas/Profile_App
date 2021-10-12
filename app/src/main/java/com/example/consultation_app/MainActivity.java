@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.example.consultation_app.database.DatabaseHelper;
 import com.example.consultation_app.models.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Add Buttons to Action Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         // Create Object & Initialize Total Profile Count
         totalProfilesCount = findViewById(R.id.mainProfileCount);
 
@@ -38,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         profileList = findViewById(R.id.profileDataList);
         loadProfileListView(true);
 
-        profileList.setOnClickListener(new View.OnClickListener() {
+        profileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                // TODO: Determine List Element Then Pass Element to Profile Page
-                goToProfileActivity();
+            public void onItemClick(AdapterView parent, View view, int position, long id) {
+                // Navigate to Profile Activity of Selected Profile By Id
+                goToProfileActivity(id);
             }
         });
 
@@ -58,13 +57,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // TODO: Delete?
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
         //If ListView Length != Database Table Length
-        // Update List View of Profiles
+        // loadProfileListView(true);
     }
 
     // Create Options Menu
@@ -93,8 +91,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Navigation to Profile Activity
-    private void goToProfileActivity() {
+    private void goToProfileActivity(long profileId) {
         Intent intent = new Intent(this, ProfileActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("profileId", profileId);
+        intent.putExtras(b);
         startActivity(intent);
     }
 
@@ -103,8 +104,19 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         List<Profile> profiles = dbHelper.getAllProfiles(orderByName);
 
+        // Display List of Ids
+        List<String> profileIds = new ArrayList<>();
+        for(int i = 0; i < profiles.size(); i++) {
+            Profile profile = profiles.get(i);
+            profileIds.add(i + ". " +
+                    (orderByName ?
+                            profile.getSurname() + ", " + profile.getStudentName() :
+                            profile.getStudentId()
+                    ));
+        }
+
         // Add Profile Entries to ListView
-        profileList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, profiles));
+        profileList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, profileIds));
 
         // Add Number of Entries to Textview
         totalProfilesCount.setText(profiles.size() + " " + getResources().getString(R.string.profileNumbers) + " " + getResources().getString(orderByName ? R.string.profileSortedByName : R.string.profileSortedById));
