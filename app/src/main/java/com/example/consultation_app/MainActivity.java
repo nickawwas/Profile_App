@@ -11,7 +11,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.example.consultation_app.database.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     protected TextView totalProfilesCount;
@@ -44,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Floating Action Button -> Open Dialog Fragment
+        floatingActionButton = findViewById(R.id.insertProfileButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open Dialog Fragment
+                InsertProfileDialogFragment dialog = new InsertProfileDialogFragment();
+                dialog.show(getSupportFragmentManager(), "InsertProfileFragment");
+            }
+        });
     }
 
     @Override
@@ -84,4 +96,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO: Get, Initialize, and Update Total Count Text
+    protected void loadProfileListView() {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        //List<Profile> profiles = dbHelper.getAllProfiles();
+
+        //ArrayList<String> profileListNames = new ArrayList<>();
+        //ArrayList<String> profileListIds = new ArrayList<>();
+    }
 }
