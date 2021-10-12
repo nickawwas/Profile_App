@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name"> Consultation App </string>
+
+    <!-- Main Activity -->
+    <string name="settingsButton"> Main Activity </string>
+    <string name="toggleProfileId"> By ID </string>
+    <string name="toggleProfileName"> By Profile Name </string>
+    <string name="profileNumbers"> Profiles </string>
+    <string name="profileSortedById"> (Sorted By ID) </string>
+    <string name="profileSortedByName"> (Sorted By Name) </string>
+
+    <!-- Dialog Fragment  -->
+    <string name="dialogSurnameInput"> Student Surname </string>
+    <string name="dialogNameInput"> Student Name </string>
+    <string name="dialogIDInput"> Student ID </string>
+    <string name="dialogGPAInput"> Student GPA </string>
+    <string name="dialogCancel"> Cancel </string>
+    <string name="dialogSave"> Save </string>
+    <string name="profileNameDigits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -'"</string>
+    <string name="profileIdDigits">1234567890</string>
+    <string name="profileGPADigits">1234567890.</string>
+
+    <!-- Profile Activity -->
+    <string name="profileActivity"> Profile Activity </string>
+    <string name="userProfile"> User Profile </string>
+    <string name="profileSurname"> Surname: </string>
+    <string name="profileName"> Name: </string>
+    <string name="profileID"> ID: </string>
+    <string name="profileGPA"> GPA: </string>
+    <string name="profileCreationDate"> Profile Created: </string>
+    <string name="profileHistory"> Access History </string>
+</resources>
+

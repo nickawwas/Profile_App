@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    //TODO: Make Fragment
+    //tools:context=".DialogFragment"
+
+    <LinearLayout
+        android:id="@+id/dialogFragmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <EditText
+            android:id="@+id/dialogSurnameInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dialogSurnameInput"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="30dp"
+            android:inputType="textPersonName"
+            android:digits="@string/profileNameDigits"
+            />
+
+        <EditText
+            android:id="@+id/dialogNameInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dialogNameInput"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="30dp"
+            android:inputType="textPersonName"
+            android:digits="@string/profileNameDigits"
+            />
+
+        <EditText
+            android:id="@+id/dialogIDInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dialogIDInput"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="30dp"
+            android:inputType="numberDecimal"
+            android:digits="@string/profileIdDigits"
+            android:maxLength="8"/>
+
+        <EditText
+            android:id="@+id/dialogGPAInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dialogGPAInput"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="30dp"
+            android:inputType="numberDecimal"
+            android:digits="@string/profileGPADigits"
+            />
+
+        <Button
+            android:id="@+id/cancelProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="25dp"
+            android:layout_gravity="center"
+            android:text="@string/dialogCancel"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/saveProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="25dp"
+            android:layout_gravity="center"
+            android:text="@string/dialogSave"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
