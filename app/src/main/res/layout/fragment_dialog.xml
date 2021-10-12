@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".InsertProfileDialogFragment">
 
+        <LinearLayout
+            android:id="@+id/fragmentInputsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="80dp">
         <EditText
             android:id="@+id/dialogSurnameInput"
             android:layout_width="fill_parent"
@@ -48,12 +55,22 @@
             android:inputType="numberDecimal"
             android:digits="@string/profileGPADigits"
             />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/fragmentButtonsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity= "center"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="80dp">
         <Button
             android:id="@+id/cancelProfileButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="25dp"
+            android:layout_marginHorizontal="25dp"
             android:layout_gravity="center"
             android:text="@string/dialogCancel"
             android:textColor="@color/white"
@@ -65,9 +82,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="25dp"
+            android:layout_marginHorizontal="25dp"
             android:layout_gravity="center"
             android:text="@string/dialogSave"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
+        </LinearLayout>
 </FrameLayout>

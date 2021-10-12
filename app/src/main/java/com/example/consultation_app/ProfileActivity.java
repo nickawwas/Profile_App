@@ -3,6 +3,8 @@ package com.example.consultation_app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -64,6 +66,24 @@ public class ProfileActivity extends AppCompatActivity {
         accessHistoryList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, accesses));
     }
 
+    // Create Options Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    // Select Option from Menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteProfile:
+                // TODO: Delete Profile and Add Access
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private String getTextFromResource(int resourceId, String profileData) {
         return getResources().getString(resourceId) + " " + profileData;
