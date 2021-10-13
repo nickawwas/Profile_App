@@ -38,7 +38,7 @@
 
         <ListView
             android:id="@+id/profileDataList"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="20dp"
             android:textStyle="normal"

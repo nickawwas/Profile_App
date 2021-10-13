@@ -20,7 +20,7 @@
             android:id="@+id/userProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:text="@string/userProfile"
             android:textSize="24sp" />
@@ -76,7 +76,7 @@
 
         <ListView
             android:id="@+id/accessHistoryList"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="20dp"
             android:textStyle="normal"

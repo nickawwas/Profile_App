@@ -1,22 +1,20 @@
 package com.example.consultation_app.models;
 
-import java.util.Date;
-
 public class Access {
-    private long id;
-    private long profileId;
+    private int id;
+    private int profileId;
     private String type;
-    private Date timeStamp;
+    private String timeStamp;
 
     // Constructor
-    public Access(long aid, long pid, String accessType, Date accessTime) {
+    public Access(int aid, int pid, String accessType, String accessTime) {
         id = aid;
         profileId = pid;
         type = accessType;
         timeStamp = accessTime;
     }
 
-    public long getProfileID() {
+    public int getProfileID() {
         return profileId;
     }
 
@@ -24,7 +22,7 @@ public class Access {
         return type;
     }
 
-    public Date getTimeStamp() {
+    public String getTimeStamp() {
         return timeStamp;
     }
 }

@@ -12,10 +12,8 @@ import android.widget.Toast;
 import com.example.consultation_app.models.Profile;
 import com.example.consultation_app.models.Access;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -37,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Config.PROFILE_COLUMN_NAME + " TEXT NOT NULL, " +
                         Config.PROFILE_COLUMN_SID + " INTEGER NOT NULL UNIQUE, " +
                         Config.PROFILE_COLUMN_GPA + " REAL NOT NULL, " +
-                        Config.PROFILE_COLUMN_CREATION_DATE + " REAL NOT NULL);"
+                        Config.PROFILE_COLUMN_CREATION_DATE + " TEXT NOT NULL);"
         );
         db.execSQL(CREATE_PROFILE_TABLE);
 
@@ -71,13 +69,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Set Content Data to Profile Entry
         ContentValues contentValues = new ContentValues();
-        //TODO: Fix Issue with Date Conversion
-//        Date creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(profile.getCreationDate().toString());
+
         contentValues.put(Config.PROFILE_COLUMN_SURNAME, profile.getSurname());
         contentValues.put(Config.PROFILE_COLUMN_NAME, profile.getStudentName());
         contentValues.put(Config.PROFILE_COLUMN_SID, profile.getSurname());
         contentValues.put(Config.PROFILE_COLUMN_GPA, profile.getStudentName());
-        contentValues.put(Config.PROFILE_COLUMN_CREATION_DATE, profile.getCreationDate().toString());
+        contentValues.put(Config.PROFILE_COLUMN_CREATION_DATE, profile.getCreationDate());
 
         // Insert Entry into Profile Table
         try {
@@ -103,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Config.ACCESS_COLUMN_PID, access.getProfileID());
         contentValues.put(Config.ACCESS_COLUMN_TYPE, access.getAccessType());
-        contentValues.put(Config.ACCESS_COLUMN_TIME, access.getTimeStamp().toString());
+        contentValues.put(Config.ACCESS_COLUMN_TIME, access.getTimeStamp());
 
         // Insert Entry into Access Table
         try {
@@ -147,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     @SuppressLint("Range")
                     float gpa = cursor.getFloat(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
                     @SuppressLint("Range")
-                    Date creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE)));
+                    String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
 
                     // Add to Profile List
                     profileList.add(new Profile(id, surname, name, sid, gpa, creationDate));
@@ -192,7 +189,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range")
                 float gpa = cursor.getFloat(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
                 @SuppressLint("Range")
-                Date creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE)));
+                String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
 
                 return new Profile(id, surname, name, sid, gpa, creationDate);
             }
@@ -231,7 +228,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     @SuppressLint("Range")
                     String type = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TYPE));
                     @SuppressLint("Range")
-                    Date timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TIME)));
+                    String timeStamp = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TIME));
 
                     // Add to Access List
                     accessList.add(new Access(id, pid, type, timeStamp));

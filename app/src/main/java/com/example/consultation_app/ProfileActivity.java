@@ -13,6 +13,8 @@ import com.example.consultation_app.database.DatabaseHelper;
 import com.example.consultation_app.models.Access;
 import com.example.consultation_app.models.Profile;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -43,10 +45,21 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+
         //Default Display Profile Names And Access History
         Bundle b = getIntent().getExtras();
-        if(b != null)
-            initProfile(b.getInt("profileId"));
+        if(b != null) {
+            int profileId = b.getInt("profileId");
+
+            // Insert Open Access to Profile in Access Table
+            Date d = new Date();
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd @ HH:mm:ss");
+            //dbHelper.insertAccess(new Access(-1, profileId, "Opened", dateTimeFormat.format(d)));
+
+            //Initialize Profile Page
+            //initProfile(profileId);
+        }
     }
 
     private void initProfile(int profileId) {

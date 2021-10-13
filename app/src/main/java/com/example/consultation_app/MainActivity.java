@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 // Navigate to Profile Activity of Selected Profile By Id
-                goToProfileActivity(id);
+                goToProfileActivity(position);
             }
         });
 
@@ -62,7 +63,14 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         //If ListView Length != Database Table Length
-        // loadProfileListView(true);
+        loadProfileListView(true);
+        //TODO: Reload After Save
+
+        //TODO: Replace SID with PID - Fix in Table
+
+        //TODO: Open Profile Id from Clicking Profile
+
+        //TODO: Create Controller for DB and DateTimeConverter
     }
 
     // Create Options Menu
@@ -91,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Navigation to Profile Activity
-    private void goToProfileActivity(long profileId) {
+    private void goToProfileActivity(int profileId) {
         Intent intent = new Intent(this, ProfileActivity.class);
         Bundle b = new Bundle();
-        b.putLong("profileId", profileId);
+        b.putInt("profileId", profileId);
         intent.putExtras(b);
         startActivity(intent);
     }

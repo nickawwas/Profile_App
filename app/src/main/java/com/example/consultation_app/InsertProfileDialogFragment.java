@@ -83,11 +83,13 @@ public class InsertProfileDialogFragment extends DialogFragment {
                         if (gpaNum < 0.0 && gpaNum > 4.3) {
                             Toast.makeText(getActivity().getApplicationContext(), "GPA Must Be Between 0.0 and 4.3!", Toast.LENGTH_LONG).show();
                         } else {
-                            // Finally Insert Data into Profile Table
+                            // Format and Convert Current Date and Time
                             Date creationDate = new Date();
+                            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd @ HH:mm:ss");
 
-                            long profileId = dbHelper.insertProfile(new Profile(-1, surname, name, idNum, gpaNum, creationDate));
-                            long accessId = dbHelper.insertAccess(new Access(-1, profileId, "CREATED", creationDate));
+                            // Insert Data into Profile and Access Tables
+                            long profileId = dbHelper.insertProfile(new Profile(-1, surname, name, idNum, gpaNum, dateTimeFormat.format(creationDate)));
+                            long accessId = dbHelper.insertAccess(new Access(-1, profileId, "CREATED", dateTimeFormat.format(creationDate)));
 
                             Toast.makeText(getActivity().getApplicationContext(), "Student Profile Saved:" + profileId + "," + accessId + "!", Toast.LENGTH_LONG).show();
                             dismiss();
