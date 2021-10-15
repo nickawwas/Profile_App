@@ -30,10 +30,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Create Profile and Access Tables
         String CREATE_PROFILE_TABLE = String.format(
                 "CREATE TABLE " + Config.PROFILE_TABLE_NAME + " (" +
-                        Config.PROFILE_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        Config.PROFILE_COLUMN_ID + " INTEGER PRIMARY KEY, " +
                         Config.PROFILE_COLUMN_SURNAME + " TEXT NOT NULL, " +
                         Config.PROFILE_COLUMN_NAME + " TEXT NOT NULL, " +
-                        Config.PROFILE_COLUMN_SID + " INTEGER NOT NULL UNIQUE, " +
                         Config.PROFILE_COLUMN_GPA + " REAL NOT NULL, " +
                         Config.PROFILE_COLUMN_CREATION_DATE + " TEXT NOT NULL);"
         );
@@ -45,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Config.ACCESS_COLUMN_PID + " INTEGER NOT NULL, " +
                         Config.ACCESS_COLUMN_TYPE + " TEXT NOT NULL, " +
                         Config.ACCESS_COLUMN_TIME + " TEXT NOT NULL);"
-        );// "FOREIGN KEY(" + Config.ACCESS_COLUMN_PID + ") REFERENCES " + Config.PROFILE_TABLE_NAME + "(" + Config.PROFILE_COLUMN_ID + ")," +
+        ); // "FOREIGN KEY(" + Config.ACCESS_COLUMN_PID + ") REFERENCES " + Config.PROFILE_TABLE_NAME + "(" + Config.PROFILE_COLUMN_ID + ")," +
         db.execSQL(CREATE_ACCESS_TABLE);
     }
 
@@ -53,14 +52,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop Both Profile and Access Tables
         db.execSQL("DROP TABLE IF EXISTS " + Config.PROFILE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + Config.PROFILE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Config.ACCESS_TABLE_NAME);
 
         // Create New Version of Tables
         onCreate(db);
     }
 
     // Insert Profile into Profile Table
-    //SQL Query: "INSERT INTO " + Config.PROFILE_TABLE_NAME + " VALUES (" + profile.getSurname() + ", " + profile.getStudentName() + ", " + profile.getStudentId() + ", " + profile.getGpa() + ");"
+    // SQL Query: "INSERT INTO " + Config.PROFILE_TABLE_NAME + " VALUES (" + profile.getSurname() + ", " + profile.getStudentName() + ", " + profile.getStudentId() + ", " + profile.getGpa() + ");"
     public long insertProfile(Profile profile) {
         long id = -1;
 
@@ -70,9 +69,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Set Content Data to Profile Entry
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put(Config.PROFILE_COLUMN_ID, profile.getProfileId());
         contentValues.put(Config.PROFILE_COLUMN_SURNAME, profile.getSurname());
         contentValues.put(Config.PROFILE_COLUMN_NAME, profile.getStudentName());
-        contentValues.put(Config.PROFILE_COLUMN_SID, profile.getSurname());
         contentValues.put(Config.PROFILE_COLUMN_GPA, profile.getStudentName());
         contentValues.put(Config.PROFILE_COLUMN_CREATION_DATE, profile.getCreationDate());
 
@@ -89,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Insert Access into Access Table
-    //SQL Query: "INSERT INTO " + Config.ACCESS_TABLE_NAME + " VALUES (" + access.getProfileID() + ", " +  access.getAccessType() + ", " + access.getTimeStamp() + ");"
+    // SQL Query: "INSERT INTO " + Config.ACCESS_TABLE_NAME + " VALUES (" + access.getProfileID() + ", " +  access.getAccessType() + ", " + access.getTimeStamp() + ");"
     public long insertAccess(Access access) {
         long id = -1;
 
@@ -117,7 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Get All Profiles Sorted By Name or Id to Display on Main Activity
     // SQL Query: "SELECT * FROM " + Config.PROFILE_TABLE_NAME + " ORDER BY " + orderType + ";"
     public List<Profile> getAllProfiles(boolean orderByName) {
-        String orderType = orderByName ? Config.PROFILE_COLUMN_SURNAME : Config.PROFILE_COLUMN_SID;
+        String orderType = orderByName ? Config.PROFILE_COLUMN_SURNAME : Config.PROFILE_COLUMN_ID;
 
         // Create Readable Database Instance
         SQLiteDatabase db = this.getReadableDatabase();
@@ -133,22 +132,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.moveToFirst();
 
                 do {
-                    @SuppressLint("Range")
-                    long id = cursor.getLong(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
-                    @SuppressLint("Range")
-                    String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
-                    @SuppressLint("Range")
-                    String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
-                    @SuppressLint("Range")
-                    int sid = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_SID));
-                    @SuppressLint("Range")
-                    float gpa = cursor.getFloat(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
-                    @SuppressLint("Range")
-                    String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
-
-                    // Add to Profile List
-                    profileList.add(new Profile(id, surname, name, sid, gpa, creationDate));
-
+//                    @SuppressLint("Range")
+//                    int id = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
+//                    @SuppressLint("Range")
+//                    String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
+//                    @SuppressLint("Range")
+//                    String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
+//                    @SuppressLint("Range")
+//                    double gpa = cursor.getDouble(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
+//                    @SuppressLint("Range")
+//                    String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
+//
+//                    // Add to Profile List
+//                    profileList.add(new Profile(id, surname, name, gpa, creationDate));
+                      profileList.add(getProfile(cursor));
                 // Move Cursor to Next Element in Table
                 } while(cursor.moveToNext());
 
@@ -175,23 +172,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Profile profile = null;
 
         try {
-            cursor = db.query(Config.PROFILE_TABLE_NAME, null, Config.PROFILE_COLUMN_SID + "=?", new String[]{ "" + studentId }, null, null, null);
+            cursor = db.query(Config.PROFILE_TABLE_NAME, null, Config.PROFILE_COLUMN_ID + "=?", new String[]{ "" + studentId }, null, null, null);
 
             if(cursor != null && cursor.moveToFirst()) {
-                @SuppressLint("Range")
-                long id = cursor.getLong(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
-                @SuppressLint("Range")
-                String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
-                @SuppressLint("Range")
-                String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
-                @SuppressLint("Range")
-                int sid = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_SID));
-                @SuppressLint("Range")
-                float gpa = cursor.getFloat(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
-                @SuppressLint("Range")
-                String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
-
-                return new Profile(id, surname, name, sid, gpa, creationDate);
+                return getProfile(cursor);
+//                @SuppressLint("Range")
+//                int id = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
+//                @SuppressLint("Range")
+//                String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
+//                @SuppressLint("Range")
+//                String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
+//                @SuppressLint("Range")
+//                double gpa = cursor.getDouble(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
+//                @SuppressLint("Range")
+//                String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
+//
+//                return new Profile(id, surname, name, gpa, creationDate);
             }
         } catch(Exception e) {
             Toast.makeText(context, "Failed to Retrieve Selected Profile from Profile Table: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -215,23 +211,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Get All Entries from Access Table Where PID = profileId Parameter
         try {
-            cursor = db.query(Config.ACCESS_TABLE_NAME, null, Config.ACCESS_COLUMN_PID + "=?", new String[]{ "" + profileId }, null, null, null);
+            cursor = db.query(Config.ACCESS_TABLE_NAME, null, Config.ACCESS_COLUMN_PID + "=?", new String[]{ "" + profileId }, null, null, Config.ACCESS_COLUMN_ID + " DESC");
 
             if(cursor != null) {
                 cursor.moveToFirst();
 
                 do {
-                    @SuppressLint("Range")
-                    long id = cursor.getLong(cursor.getColumnIndex(Config.ACCESS_COLUMN_ID));
-                    @SuppressLint("Range")
-                    long pid = cursor.getLong(cursor.getColumnIndex(Config.ACCESS_COLUMN_PID));
-                    @SuppressLint("Range")
-                    String type = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TYPE));
-                    @SuppressLint("Range")
-                    String timeStamp = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TIME));
-
-                    // Add to Access List
-                    accessList.add(new Access(id, pid, type, timeStamp));
+//                    @SuppressLint("Range")
+//                    int id = cursor.getInt(cursor.getColumnIndex(Config.ACCESS_COLUMN_ID));
+//                    @SuppressLint("Range")
+//                    int pid = cursor.getInt(cursor.getColumnIndex(Config.ACCESS_COLUMN_PID));
+//                    @SuppressLint("Range")
+//                    String type = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TYPE));
+//                    @SuppressLint("Range")
+//                    String timeStamp = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TIME));
+//
+//                    // Add to Access List
+//                    accessList.add(new Access(id, pid, type, timeStamp));
+                    accessList.add(getAccess(cursor));
 
                 // Move Cursor to Next Element in Table
                 } while(cursor.moveToNext());
@@ -268,5 +265,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return id;
+    }
+
+    @SuppressLint("Range")
+    public Profile getProfile(Cursor cursor) {
+        int id = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
+        String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
+        String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
+        double gpa = cursor.getDouble(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
+        String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
+
+        return new Profile(id, surname, name, gpa, creationDate);
+    }
+
+    @SuppressLint("Range")
+    public Access getAccess(Cursor cursor) {
+        int id = cursor.getInt(cursor.getColumnIndex(Config.ACCESS_COLUMN_ID));
+        int pid = cursor.getInt(cursor.getColumnIndex(Config.ACCESS_COLUMN_PID));
+        String type = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TYPE));
+        String timeStamp = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TIME));
+
+        return new Access(id, pid, type, timeStamp);
     }
 }

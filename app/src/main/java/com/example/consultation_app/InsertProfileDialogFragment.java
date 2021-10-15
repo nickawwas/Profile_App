@@ -80,7 +80,7 @@ public class InsertProfileDialogFragment extends DialogFragment {
                         Toast.makeText(getActivity().getApplicationContext(), "User with Inputted ID Already Exists!", Toast.LENGTH_LONG).show();
                     } else {
                         //5) GPA Must Be Between 0.0 and 4.3
-                        if (gpaNum < 0.0 && gpaNum > 4.3) {
+                        if (gpaNum < 0.0 || gpaNum > 4.3) {
                             Toast.makeText(getActivity().getApplicationContext(), "GPA Must Be Between 0.0 and 4.3!", Toast.LENGTH_LONG).show();
                         } else {
                             // Format and Convert Current Date and Time
@@ -88,10 +88,10 @@ public class InsertProfileDialogFragment extends DialogFragment {
                             SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd @ HH:mm:ss");
 
                             // Insert Data into Profile and Access Tables
-                            long profileId = dbHelper.insertProfile(new Profile(-1, surname, name, idNum, gpaNum, dateTimeFormat.format(creationDate)));
-                            long accessId = dbHelper.insertAccess(new Access(-1, profileId, "CREATED", dateTimeFormat.format(creationDate)));
+                            long profileId = dbHelper.insertProfile(new Profile(idNum, surname, name, gpaNum, dateTimeFormat.format(creationDate)));
+                            long accessId = dbHelper.insertAccess(new Access(idNum, "CREATED", dateTimeFormat.format(creationDate)));
 
-                            Toast.makeText(getActivity().getApplicationContext(), "Student Profile Saved:" + profileId + "," + accessId + "!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "Student Profile Saved!", Toast.LENGTH_LONG).show();
                             dismiss();
                         }
                     }

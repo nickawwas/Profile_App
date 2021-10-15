@@ -6,7 +6,14 @@ public class Access {
     private String type;
     private String timeStamp;
 
-    // Constructor
+    // Default Constructor - Access id Auto Incremented
+    public Access(int pid, String accessType, String accessTime) {
+        profileId = pid;
+        type = accessType;
+        timeStamp = accessTime;
+    }
+
+    // Regular Constructor
     public Access(int aid, int pid, String accessType, String accessTime) {
         id = aid;
         profileId = pid;

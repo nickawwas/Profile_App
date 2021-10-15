@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.consultation_app.database.DatabaseHelper;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected TextView totalProfilesCount;
     protected ListView profileList;
     protected FloatingActionButton floatingActionButton;
+
+    protected List<Profile> profiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 // Navigate to Profile Activity of Selected Profile By Id
-                goToProfileActivity(position);
+                goToProfileActivity(profiles.get(position).getProfileId());
             }
         });
 
@@ -65,10 +68,6 @@ public class MainActivity extends AppCompatActivity {
         //If ListView Length != Database Table Length
         loadProfileListView(true);
         //TODO: Reload After Save
-
-        //TODO: Replace SID with PID - Fix in Table
-
-        //TODO: Open Profile Id from Clicking Profile
 
         //TODO: Create Controller for DB and DateTimeConverter
     }
@@ -110,21 +109,21 @@ public class MainActivity extends AppCompatActivity {
     // Get, Initialize, and Update Total Count Text
     protected void loadProfileListView(boolean orderByName) {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
-        List<Profile> profiles = dbHelper.getAllProfiles(orderByName);
+        profiles = dbHelper.getAllProfiles(orderByName);
 
         // Display List of Ids
-        List<String> profileIds = new ArrayList<>();
+        List<String> profileItems = new ArrayList<>();
         for(int i = 0; i < profiles.size(); i++) {
             Profile profile = profiles.get(i);
-            profileIds.add(i + ". " +
+            profileItems.add((i + 1) + ". " +
                     (orderByName ?
                             profile.getSurname() + ", " + profile.getStudentName() :
-                            profile.getStudentId()
+                            profile.getProfileId()
                     ));
         }
 
         // Add Profile Entries to ListView
-        profileList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, profileIds));
+        profileList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, profileItems));
 
         // Add Number of Entries to Textview
         totalProfilesCount.setText(profiles.size() + " " + getResources().getString(R.string.profileNumbers) + " " + getResources().getString(orderByName ? R.string.profileSortedByName : R.string.profileSortedById));

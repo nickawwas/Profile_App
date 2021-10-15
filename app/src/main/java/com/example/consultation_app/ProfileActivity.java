@@ -14,6 +14,7 @@ import com.example.consultation_app.models.Access;
 import com.example.consultation_app.models.Profile;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,10 +56,10 @@ public class ProfileActivity extends AppCompatActivity {
             // Insert Open Access to Profile in Access Table
             Date d = new Date();
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd @ HH:mm:ss");
-            //dbHelper.insertAccess(new Access(-1, profileId, "Opened", dateTimeFormat.format(d)));
+            long accessId = dbHelper.insertAccess(new Access(profileId, "Opened", dateTimeFormat.format(d)));
 
             //Initialize Profile Page
-            //initProfile(profileId);
+            initProfile(profileId);
         }
     }
 
@@ -70,13 +71,21 @@ public class ProfileActivity extends AppCompatActivity {
         // Set Profile Data to TextView
         profileSurname.setText(getTextFromResource(R.string.profileSurname, profile.getSurname()));
         profileName.setText(getTextFromResource(R.string.profileName, profile.getStudentName()));
-        profileID.setText(getTextFromResource(R.string.profileID, profile.getStudentId() + ""));
+        profileID.setText(getTextFromResource(R.string.profileID, profile.getProfileId() + ""));
         profileGPA.setText(getTextFromResource(R.string.profileGPA, profile.getGpa() + ""));
         profileCreationDate.setText(getTextFromResource(R.string.profileCreationDate, profile.getCreationDate() + ""));
 
         // Get List of Accesses
         List<Access> accesses = dbHelper.getAllAccessesById(profileId);
-        accessHistoryList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, accesses));
+
+        // Display List of Accesses Types and Times
+        List<String> accessedItems = new ArrayList<>();
+        for(int i = 0; i < accesses.size(); i++) {
+            Access access = accesses.get(i);
+            accessedItems.add(access.getTimeStamp() + " (" + access.getAccessType() + ") ");
+        }
+
+        accessHistoryList.setAdapter(new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, accessedItems));
     }
 
     // Create Options Menu
