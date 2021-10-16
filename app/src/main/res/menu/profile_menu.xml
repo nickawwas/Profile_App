@@ -5,6 +5,6 @@
         android:title="@string/deleteProfile"
         android:id="@+id/deleteProfile"
         android:icon="@android:drawable/ic_delete"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom|withText"
         />
 </menu>

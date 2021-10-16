@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ConsultationApp">
         <activity
-            android:name="com.example.consultation_app.MainActivity"
+            android:name="com.example.consultation_app.Views.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +19,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.consultation_app.ProfileActivity"
-            android:parentActivityName="com.example.consultation_app.MainActivity"
+            android:name="com.example.consultation_app.Views.ProfileActivity"
+            android:parentActivityName="com.example.consultation_app.Views.MainActivity"
             android:label="@string/profileActivity"
             android:exported="true" />
     </application>

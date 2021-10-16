@@ -1,4 +1,4 @@
-package com.example.consultation_app.database;
+package com.example.consultation_app.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.example.consultation_app.models.Profile;
-import com.example.consultation_app.models.Access;
+import com.example.consultation_app.Models.Profile;
+import com.example.consultation_app.Models.Access;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(Config.PROFILE_COLUMN_ID, profile.getProfileId());
         contentValues.put(Config.PROFILE_COLUMN_SURNAME, profile.getSurname());
         contentValues.put(Config.PROFILE_COLUMN_NAME, profile.getStudentName());
-        contentValues.put(Config.PROFILE_COLUMN_GPA, profile.getStudentName());
+        contentValues.put(Config.PROFILE_COLUMN_GPA, profile.getGpa());
         contentValues.put(Config.PROFILE_COLUMN_CREATION_DATE, profile.getCreationDate());
 
         // Insert Entry into Profile Table
@@ -128,24 +128,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             cursor = db.query(Config.PROFILE_TABLE_NAME, null, null, null, null, null, orderType);
 
-            if(cursor != null) {
-                cursor.moveToFirst();
-
+            if(cursor != null && cursor.moveToFirst()) {
                 do {
-//                    @SuppressLint("Range")
-//                    int id = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
-//                    @SuppressLint("Range")
-//                    String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
-//                    @SuppressLint("Range")
-//                    String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
-//                    @SuppressLint("Range")
-//                    double gpa = cursor.getDouble(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
-//                    @SuppressLint("Range")
-//                    String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
-//
-//                    // Add to Profile List
-//                    profileList.add(new Profile(id, surname, name, gpa, creationDate));
-                      profileList.add(getProfile(cursor));
+                    // Add to Profile List
+                    profileList.add(getProfile(cursor));
+
                 // Move Cursor to Next Element in Table
                 } while(cursor.moveToNext());
 
@@ -174,20 +161,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             cursor = db.query(Config.PROFILE_TABLE_NAME, null, Config.PROFILE_COLUMN_ID + "=?", new String[]{ "" + studentId }, null, null, null);
 
+            // Return First Profile Object Found with Id, Else Null
             if(cursor != null && cursor.moveToFirst()) {
                 return getProfile(cursor);
-//                @SuppressLint("Range")
-//                int id = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));
-//                @SuppressLint("Range")
-//                String surname = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_SURNAME));
-//                @SuppressLint("Range")
-//                String name = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_NAME));
-//                @SuppressLint("Range")
-//                double gpa = cursor.getDouble(cursor.getColumnIndex(Config.PROFILE_COLUMN_GPA));
-//                @SuppressLint("Range")
-//                String creationDate = cursor.getString(cursor.getColumnIndex(Config.PROFILE_COLUMN_CREATION_DATE));
-//
-//                return new Profile(id, surname, name, gpa, creationDate);
             }
         } catch(Exception e) {
             Toast.makeText(context, "Failed to Retrieve Selected Profile from Profile Table: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -213,21 +189,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             cursor = db.query(Config.ACCESS_TABLE_NAME, null, Config.ACCESS_COLUMN_PID + "=?", new String[]{ "" + profileId }, null, null, Config.ACCESS_COLUMN_ID + " DESC");
 
-            if(cursor != null) {
-                cursor.moveToFirst();
-
+            if(cursor != null && cursor.moveToFirst()) {
                 do {
-//                    @SuppressLint("Range")
-//                    int id = cursor.getInt(cursor.getColumnIndex(Config.ACCESS_COLUMN_ID));
-//                    @SuppressLint("Range")
-//                    int pid = cursor.getInt(cursor.getColumnIndex(Config.ACCESS_COLUMN_PID));
-//                    @SuppressLint("Range")
-//                    String type = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TYPE));
-//                    @SuppressLint("Range")
-//                    String timeStamp = cursor.getString(cursor.getColumnIndex(Config.ACCESS_COLUMN_TIME));
-//
-//                    // Add to Access List
-//                    accessList.add(new Access(id, pid, type, timeStamp));
+                    // Add to Access List
                     accessList.add(getAccess(cursor));
 
                 // Move Cursor to Next Element in Table
@@ -249,7 +213,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Delete Entry from Profile Table and Add Deleted Access to Access Table
     // SQL Query: "DELETE * FROM " + Config.ACCESS_TABLE_NAME + " WHERE " + Config.ACCESS_COLUMN_PID + " = " + profileId + ";"
-    public long deleteProfile(long profileId) {
+    public long deleteProfile(int profileId) {
         long id = -1;
 
         // Create Writable Database Instance to Delete
@@ -257,7 +221,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Delete Entry from Profile Table
         try {
-            id = db.delete(Config.PROFILE_TABLE_NAME, Config.PROFILE_COLUMN_ID, new String[]{ "" + profileId});
+            id = db.delete(Config.PROFILE_TABLE_NAME, Config.PROFILE_COLUMN_ID + " =?", new String[]{ "" + profileId});
         } catch (SQLiteException e) {
             Toast.makeText(context, "Failed Insert into Access Table: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
@@ -267,6 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    // Helper Methods to Get Profile and Access from Cursor
     @SuppressLint("Range")
     public Profile getProfile(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndex(Config.PROFILE_COLUMN_ID));

@@ -1,4 +1,4 @@
-package com.example.consultation_app.models;
+package com.example.consultation_app.Models;
 
 public class Access {
     private int id;

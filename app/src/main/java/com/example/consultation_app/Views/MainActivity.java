@@ -1,10 +1,9 @@
-package com.example.consultation_app;
+package com.example.consultation_app.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,11 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.example.consultation_app.database.DatabaseHelper;
-import com.example.consultation_app.models.Profile;
+import com.example.consultation_app.R;
+import com.example.consultation_app.Controllers.DatabaseHelper;
+import com.example.consultation_app.Models.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -28,11 +26,15 @@ public class MainActivity extends AppCompatActivity {
     protected FloatingActionButton floatingActionButton;
 
     protected List<Profile> profiles;
+    protected DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Initialize DB Helper
+        dbHelper = new DatabaseHelper(getApplicationContext());
 
         // Create Object & Initialize Total Profile Count
         totalProfilesCount = findViewById(R.id.mainProfileCount);
@@ -65,11 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //If ListView Length != Database Table Length
+        //Ideally Check If ListView Length != Database Table Length
         loadProfileListView(true);
-        //TODO: Reload After Save
-
-        //TODO: Create Controller for DB and DateTimeConverter
     }
 
     // Create Options Menu
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Get, Initialize, and Update Total Count Text
     protected void loadProfileListView(boolean orderByName) {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
         profiles = dbHelper.getAllProfiles(orderByName);
 
         // Display List of Ids

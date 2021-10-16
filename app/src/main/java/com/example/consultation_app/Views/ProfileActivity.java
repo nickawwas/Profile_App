@@ -1,4 +1,4 @@
-package com.example.consultation_app;
+package com.example.consultation_app.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,14 +8,15 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.consultation_app.database.DatabaseHelper;
-import com.example.consultation_app.models.Access;
-import com.example.consultation_app.models.Profile;
+import com.example.consultation_app.R;
+import com.example.consultation_app.Controllers.DatabaseHelper;
+import com.example.consultation_app.Models.Access;
+import com.example.consultation_app.Models.DateTimeFormatter;
+import com.example.consultation_app.Models.Profile;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -23,10 +24,19 @@ public class ProfileActivity extends AppCompatActivity {
     protected ListView accessHistoryList;
     protected TextView profileSurname, profileName, profileID, profileGPA, profileCreationDate;
 
+    protected int profileId;
+    protected boolean isDeleted;
+    protected DatabaseHelper dbHelper;
+    protected DateTimeFormatter formatter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Initialize Helpers - dbHelper and formatter
+        dbHelper = new DatabaseHelper(this);
+        formatter = new DateTimeFormatter();
 
         // Add Buttons to Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,19 +56,16 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-
         //Default Display Profile Names And Access History
         Bundle b = getIntent().getExtras();
         if(b != null) {
-            int profileId = b.getInt("profileId");
+            isDeleted = false;
+            profileId = b.getInt("profileId");
 
-            // Insert Open Access to Profile in Access Table
-            Date d = new Date();
-            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd @ HH:mm:ss");
-            long accessId = dbHelper.insertAccess(new Access(profileId, "Opened", dateTimeFormat.format(d)));
+            // Insert Open Access to DB
+            long accessId = dbHelper.insertAccess(new Access(profileId, "Opened", formatter.getDateTimeFormat()));
 
-            //Initialize Profile Page
+            // Initialize Profile Page
             initProfile(profileId);
         }
     }
@@ -75,6 +82,11 @@ public class ProfileActivity extends AppCompatActivity {
         profileGPA.setText(getTextFromResource(R.string.profileGPA, profile.getGpa() + ""));
         profileCreationDate.setText(getTextFromResource(R.string.profileCreationDate, profile.getCreationDate() + ""));
 
+        // Load List of Accesses
+        loadAcceses(profileId);
+    }
+
+    public void loadAcceses(int profileId) {
         // Get List of Accesses
         List<Access> accesses = dbHelper.getAllAccessesById(profileId);
 
@@ -100,14 +112,40 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.deleteProfile:
-                // Delete Profile and Add Access
-                // deleteProfile(profileId);
-                // Insert Deleted Access to Access Table
-                // insertAccess(new Access(0, profileId, "Deleted", new Date()));
+                // Allow Delete if Profile Is Not Deleted, Else Disable Delete
+                if(!isDeleted) {
+                    // Delete Profile and Add Access
+                    long deletionId = dbHelper.deleteProfile(profileId);
+
+                    // Insert Deleted Access to Access Table
+                    long accessId = dbHelper.insertAccess(new Access(profileId, "Deleted", formatter.getDateTimeFormat()));
+
+                    // Toast Message Informing User Delete Was Successful
+                    Toast.makeText(getApplicationContext(), "Student Profile Deleted!", Toast.LENGTH_LONG).show();
+
+                    // Reload Access List
+                    loadAcceses(profileId);
+
+                    //Disable Delete Button
+                    isDeleted = !isDeleted;
+                } else {
+                    // Toast Message Informing User Already Delete
+                    Toast.makeText(getApplicationContext(), "Student Profile Already Deleted!", Toast.LENGTH_LONG).show();
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // On Back Press, A Closed Event is Added to Access Table
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        // Add Closed Access to DB
+        long accessId = dbHelper.insertAccess(new Access(profileId, "Closed", formatter.getDateTimeFormat()));
     }
 
     private String getTextFromResource(int resourceId, String profileData) {

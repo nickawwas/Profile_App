@@ -1,4 +1,4 @@
-package com.example.consultation_app.database;
+package com.example.consultation_app.Controllers;
 
 public class Config {
     public static final String DB_NAME = "consultation_db";
