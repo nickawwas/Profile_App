@@ -111,6 +111,10 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                // Call Overriden Back Pressed Functin on Back Button Click to Insert Closed Access to Profile
+                onBackPressed();
+                return true;
             case R.id.deleteProfile:
                 // Allow Delete if Profile Is Not Deleted, Else Disable Delete
                 if(!isDeleted) {
