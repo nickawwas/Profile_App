@@ -7,6 +7,7 @@ Build a Simple Android App with a SQLite Database
 ### Overview
 
 > Simple Android App with Two Activities and SQLite Database
+
 > Main Activity - Launcher Activity
 >
 > - Display Total Number of Profiles Stored in DB
