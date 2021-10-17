@@ -1,4 +1,4 @@
-package com.example.consultation_app.Controllers;
+package com.example.profile_app.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.example.consultation_app.Models.Profile;
-import com.example.consultation_app.Models.Access;
+import com.example.profile_app.Models.Profile;
+import com.example.profile_app.Models.Access;
 
 import java.util.ArrayList;
 import java.util.Collections;

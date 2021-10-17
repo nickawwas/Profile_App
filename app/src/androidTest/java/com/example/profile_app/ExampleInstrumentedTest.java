@@ -1,4 +1,4 @@
-package com.example.consultation_app;
+package com.example.profile_app;
 
 import android.content.Context;
 

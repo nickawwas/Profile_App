@@ -1,4 +1,4 @@
-package com.example.consultation_app.Views;
+package com.example.profile_app.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,9 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.consultation_app.R;
-import com.example.consultation_app.Controllers.DatabaseHelper;
-import com.example.consultation_app.Models.Profile;
+import com.example.profile_app.R;
+import com.example.profile_app.Controllers.DatabaseHelper;
+import com.example.profile_app.Models.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

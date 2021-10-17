@@ -1,4 +1,4 @@
-package com.example.consultation_app.Views;
+package com.example.profile_app.Views;
 
 import android.os.Bundle;
 
@@ -14,11 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.consultation_app.R;
-import com.example.consultation_app.Controllers.DatabaseHelper;
-import com.example.consultation_app.Models.Access;
-import com.example.consultation_app.Models.DateTimeFormatter;
-import com.example.consultation_app.Models.Profile;
+import com.example.profile_app.R;
+import com.example.profile_app.Controllers.DatabaseHelper;
+import com.example.profile_app.Models.Access;
+import com.example.profile_app.Models.DateTimeFormatter;
+import com.example.profile_app.Models.Profile;
 
 // Dialog Fragment
 public class InsertProfileDialogFragment extends DialogFragment {

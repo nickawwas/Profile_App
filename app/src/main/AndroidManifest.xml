@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.consultation_app">
+    package="com.example.profile_app">
 
     <application
         android:allowBackup="true"
@@ -8,9 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ConsultationApp">
+        android:theme="@style/Theme.ProfileApp">
         <activity
-            android:name="com.example.consultation_app.Views.MainActivity"
+            android:name="com.example.profile_app.Views.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +19,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.consultation_app.Views.ProfileActivity"
-            android:parentActivityName="com.example.consultation_app.Views.MainActivity"
+            android:name="com.example.profile_app.Views.ProfileActivity"
+            android:parentActivityName="com.example.profile_app.Views.MainActivity"
             android:label="@string/profileActivity"
             android:exported="true" />
     </application>

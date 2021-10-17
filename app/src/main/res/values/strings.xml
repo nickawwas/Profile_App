@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name"> Consultation App </string>
+    <string name="app_name"> Profile App </string>
 
     <!-- Main Activity -->
     <string name="settingsButton"> Main Activity </string>
